@@ -8,8 +8,8 @@ char input1[90],input2[90];
 char temp[90];
 
 int main(){
-    scanf("%s",input1);
-    scanf("%s",input2);
+    gets(input1); // For this problem, using scanf isn't correct, since it may occur " " and it will end but gets() will not.
+    gets(input2);
 
     int i=0;
     for(int j=0;input1[j]!='\0';j++){
@@ -27,7 +27,7 @@ int main(){
                 i++;
             }            
     }
-    
+    temp[i] = '\0';
     for(int l=0;temp[l]!='\0';l++){
         printf("%c",temp[l]);
     }
