@@ -98,7 +98,8 @@ int main(int argc, char** argv)
 void List::split(List &A, List &B) {
     Node * p;
     p = first -> next;
-    while(p->next!=NULL) {
+    while(p!=NULL) {
+        // cout << p->data << endl;
         if (p->data % 2 == 1) {
             A.append(p->data);
 
