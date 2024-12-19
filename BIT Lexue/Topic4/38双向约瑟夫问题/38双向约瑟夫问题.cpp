@@ -2,6 +2,10 @@
 // Created by FUGUO on 2024/12/17.
 //
 
+// This is the solution of https://lexue.bit.edu.cn/mod/programming/view.php?id=476051
+// Created by FUGUO on 2024/12/17.
+//
+
 #include<iostream>
 #include<cstdio>
 using namespace std;
@@ -22,6 +26,7 @@ public:
     ~Joseph();
     void simulate(int n, int m, int k);
     int calculate();
+    void printList();
 };
 
 Joseph::Joseph(int n) {
@@ -52,7 +57,7 @@ Joseph::~Joseph() {
         }
         delete head;
     }
-}
+};
 
 int Joseph::calculate() {
     int i = 0;
@@ -65,7 +70,7 @@ int Joseph::calculate() {
     }
 //    cout << p->index;
     return i;
-}
+};// calculate the length of the Joseph
 
 void Joseph::simulate(int n, int k, int m) {
 //    cout << n << m << k << endl;
@@ -86,79 +91,61 @@ void Joseph::simulate(int n, int k, int m) {
         start = start->next;
     }
     p1=p2=start;
-    for (;(head->next) != head;) {
+    for (;head->next!=head;) {// for the special condition that there is only head left(kick out 2 at last)
+
         int tot=calculate();
-        int n=0;
+//        cout << "tot:" << tot << endl;
+
+
         if(tot==1) {
             n= head->next->index;
             cout << n << ',';
             break;
-        }
-        cout << "tot:" << tot << endl;
-        node * temp1;
-        node * temp2;
-        if (m==1) {
-            temp1 = p1;
-            temp2 = p2;
-        } else {
-            for ( int i=1;i<=m-1;i++){
-                p1 = p1 -> last;
-                if ( p1 == head ) {
-                    i--;
-                }
+        } // for the special condition that there is only one left(then kick out it)
+
+//         cout << "Current list: ";
+//         printList();
+
+//        cout << "check 0" << endl;
+
+
+        for ( int i=1;i<=m-1;i++){
+            p1 = p1 -> last;
+            if ( p1 == head ) {
+                i--;
             }
-            temp1 = p1;
-            for ( int i=1;i<=m-1;i++) {
-                p2 = p2 -> next;
-                if ( p2 == head ) {
-                    i--;
-                }
-            }
-            temp2 = p2;
         }
 
-        out1 = temp1 -> index;
-        out2 = temp2 -> index;
+        for ( int i=1;i<=m-1;i++) {
+            p2 = p2 -> next;
+            if ( p2 == head ) {
+                i--;
+            }
+        }
+
+
+        out1 = p1 -> index;
+        out2 = p2 -> index;
 
 //        cout << "task" <<temp1->index << "and" << temp2->index<<endl;
 
-        p1 = temp1 -> last;
-        p2 = temp2 -> next;
+        (p1 -> next) -> last = p1 -> last;
+        (p1 -> last) -> next = p1 -> next;
 
-//        cout << "Before";
-//        cout << p1->index << "and"<< p2->index;
-//        cout << p1->last->index << "and" << p2->next->index ;
-//        cout << temp1->last->index << "and" << temp2->next->index << endl;
+        (p2 -> last) -> next = p2 -> next;
+        (p2 -> next) -> last = p2 -> last;
 
-        (temp1->next) -> last = temp1 -> last;
-        (temp1->last) -> next = temp1 -> next;
-        temp1 -> next = NULL ;
-        temp1 -> last = NULL ;
+//        temp1 = p1;
+//        temp2 = p2;
+//
+//        delete temp1;
+//        delete temp2;
 
-//        cout << "After 1,";
-//        cout << p1->index << "and"<< p2->index;
-//        cout << p1->last->index << "and" << p2->next->index ;
-//        cout << temp1->last->index << "and" << temp2->next->index << endl;
+        p1 = (p1->next)->last;
+        p2 = (p2->last)->next;
 
-        temp2-> last -> next = temp2 -> next;
-        (temp2 -> next) -> last = temp2 -> last;
-        temp2 -> next = NULL;
-        temp2 -> last = NULL;
-
-//        cout << "After 2,";
-//        cout << p1->index << "and"<< p2->index;
-//        cout << p1->last->index << "and" << p2->next->index ;
-//        cout << temp1->last->index << "and" << temp2->next->index << endl;
-
-        if(p2 == head) {
-            p2 = p2 -> next;
-        }
-        if( p1==head ) {
-            p1 = p1 -> last;
-        }
-
-//        cout << "After check,";
-//        cout << p1->index << "and"<< p2->index;
+//        cout << "Check the target";
+//        cout << p1->index << "and"<< p2->index << endl;
 //        cout << p1->last->index << "and" << p2->next->index ;
 //        cout << temp1->last->index << "and" << temp2->next->index << endl;
 
@@ -170,9 +157,27 @@ void Joseph::simulate(int n, int k, int m) {
             // ! swap the order
             cout << out2 << '-' << out1 << ',';
         }
+
+
+        if(p2 == head) {
+            p2 = p2 -> next;
+        }
+        if( p1==head ) {
+            p1 = p1 -> last;
+        }
+
     }
     cout << endl;
 }
+
+void Joseph::printList() {
+    node *p = head;
+    do {
+        cout << p->index << " ";
+        p = p->next;
+    } while (p != head);
+    cout << endl;
+};// debug function;
 
 int main() {
     int n,m,k;

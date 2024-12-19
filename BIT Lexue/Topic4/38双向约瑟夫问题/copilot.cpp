@@ -1,6 +1,11 @@
+// This is the solution of https://lexue.bit.edu.cn/mod/programming/view.php?id=476051
+// Created by FUGUO on 2024/12/17.
+//
+
 #include<iostream>
 #include<cstdio>
 using namespace std;
+
 
 class Joseph {
 private:
@@ -16,79 +21,192 @@ public:
     Joseph(int n);
     ~Joseph();
     void simulate(int n, int m, int k);
+    int calculate();
+    void printList();
 };
 
 Joseph::Joseph(int n) {
-    node * p, * q;
-    head = new node(1);
-    p = head;
-    for (int i = 2; i <= n; ++i) {
-        q = new node(i);
-        p->next = q;
-        q->last = p;
-        p = q;
+    node * p;
+    node * temp;
+    head = p = new node(0);
+    for (int i=1;i<=n;i++) {
+//        cout << "make" << i << endl;
+        temp = p;
+        p -> next = new node(i);
+        p = p ->next;
+        p -> last = temp;
     }
     p->next = head;
     head->last = p;
-}
+};
+
 
 Joseph::~Joseph() {
-    node * p = head, * q;
-    do {
-        q = p->next;
-        delete p;
-        p = q;
-    } while (p != head);
+    node * p;
+    if(head == NULL) {
+        return;
+    } else {
+        while (head->next!=head) {
+            p = head->next;
+            head -> next = p -> next;
+            delete p;
+        }
+        delete head;
+    }
 }
 
-void Joseph::simulate(int n, int m, int k) {
-    node * p = head;
-    while (p->index != k) {
+int Joseph::calculate() {
+    int i = 0;
+    node * p;
+    p = head;
+    while(p->next!=head) {
+//        cout << p->index<<endl;
         p = p->next;
+        i++;
     }
+//    cout << p->index;
+    return i;
+}
 
-    while (n > 0) {
-        for (int i = 1; i < m; ++i) {
-            p = p->next;
-        }
-        node * q = p;
-        for (int i = 1; i < m; ++i) {
-            q = q->last;
+void Joseph::simulate(int n, int k, int m) {
+//    cout << n << m << k << endl;
+    if(k > n) {
+        cout << "k should not bigger than n." << endl;
+        return;
+    }
+    if(k*n*m==0) {
+        cout << "n,m,k must bigger than 0." << endl;
+        return;
+    }
+    int out1,out2;
+    node * p1;
+    node * p2;
+    node * start;
+    start = head;
+    for (int i=1;i<=k;i++){
+        start = start->next;
+    }
+    p1=p2=start;
+    for (;head->next!=head;) {
+
+        int tot=calculate();
+//        cout << "tot:" << tot << endl;
+        int n=0;
+        if(tot==1) {
+            n= head->next->index;
+            cout << n << ',';
+            break;
         }
 
-        if (p == q) {
-            cout << p->index;
-            p->last->next = p->next;
-            p->next->last = p->last;
-            node * temp = p->next;
-            delete p;
-            p = temp;
-            --n;
+//         cout << "Current list: ";
+//         printList();
+
+//        cout << "check 0" << endl;
+
+        node * temp1;
+        node * temp2;
+
+        for ( int i=1;i<=m-1;i++){
+            p1 = p1 -> last;
+            if ( p1 == head ) {
+                i--;
+            }
+        }
+        for ( int i=1;i<=m-1;i++) {
+            p2 = p2 -> next;
+            if ( p2 == head ) {
+                i--;
+            }
+        }
+
+
+        out1 = p1 -> index;
+        out2 = p2 -> index;
+
+//        cout << "task" <<temp1->index << "and" << temp2->index<<endl;
+
+        (p1 -> next) -> last = p1 -> last;
+        (p1 -> last) -> next = p1 -> next;
+
+        (p2 -> last) -> next = p2 -> next;
+        (p2 -> next) -> last = p2 -> last;
+
+//        temp1 = p1;
+//        temp2 = p2;
+//
+//        delete temp1;
+//        delete temp2;
+
+        p1 = (p1->next)->last;
+        p2 = (p2->last)->next;
+
+//        cout << "Before";
+//        cout << p1->index << "and"<< p2->index << endl;
+//        cout << p1->last->index << "and" << p2->next->index ;
+//        cout << temp1->last->index << "and" << temp2->next->index << endl;
+
+        if (out1 == out2) {
+
+            cout << out1 << ',';
+
         } else {
-            cout << p->index << "-" << q->index;
-            p->last->next = p->next;
-            p->next->last = p->last;
-            q->last->next = q->next;
-            q->next->last = q->last;
-            node * temp = p->next;
-            delete p;
-            p = temp;
-            delete q;
-            n -= 2;
+            // ! swap the order
+            cout << out2 << '-' << out1 << ',';
         }
 
-        if (n > 0) {
-            cout << ",";
+//        cout << endl;
+
+//        cout << "check 1" << endl;
+
+//        cout << "After 1,";
+//        cout << p1->index << "and"<< p2->index;
+//        cout << p1->last->index << "and" << p2->next->index ;
+//        cout << temp1->last->index << "and" << temp2->next->index << endl;
+
+
+//        cout << "check 2" << endl;
+
+//        cout << "After 2,";
+//        cout << p1->index << "and"<< p2->index;
+//        cout << p1->last->index << "and" << p2->next->index ;
+//        cout << temp1->last->index << "and" << temp2->next->index << endl;
+
+        if(p2 == head) {
+            p2 = p2 -> next;
         }
+        if( p1==head ) {
+            p1 = p1 -> last;
+        }
+
+//        cout << "check 3" << endl;
+
+//        cout << "After check,";
+//        cout << p1->index << "and"<< p2->index;
+//        cout << p1->last->index << "and" << p2->next->index ;
+//        cout << temp1->last->index << "and" << temp2->next->index << endl;
+
+//        cout << "End" << endl;
+
     }
     cout << endl;
 }
 
+void Joseph::printList() {
+    node *p = head;
+    do {
+        cout << p->index << " ";
+        p = p->next;
+    } while (p != head);
+    cout << endl;
+}
+
 int main() {
-    int n, k, m;
-    while (cin >> n >> k >> m) {
-        Joseph joseph(n);
-        joseph.simulate(n, m, k);
-    }
+    int n,m,k;
+    scanf("%d,%d,%d" , &n,&m,&k);
+
+    Joseph h(n);
+    h.simulate(n,m,k);
+
     return 0;
+
 }
