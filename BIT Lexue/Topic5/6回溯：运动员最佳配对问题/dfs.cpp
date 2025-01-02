@@ -52,5 +52,6 @@ int main() {
     dfs(1,0);
 
     cout << tot << endl;
+
     return 0;
 }
