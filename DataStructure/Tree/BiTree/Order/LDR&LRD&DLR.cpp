@@ -80,6 +80,16 @@ void BiTree::PostOrder(BiNode *node) {
     cout << node->data;
 }
 
+void to_forward(string in, string post) {
+    if(in.size()>0) {
+        char ch = post[post.size()-1];
+        cout << ch;
+        int k = in.find(ch);
+        to_forward(in.substr(0,k), post.substr(0,k));
+        to_forward(in.substr(k+1),post.substr(k,post.size()-k-1));
+    }
+}
+
 int main() {
     string input;
     cin >> input;
