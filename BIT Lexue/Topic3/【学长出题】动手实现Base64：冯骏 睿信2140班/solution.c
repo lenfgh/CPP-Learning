@@ -37,7 +37,7 @@ char input[40];
 
 int main(){
     gets(input);
-
+0
     int len = strlen(input);
 
     int i = 0;
